@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 40,
+    width: "100%",
   },
   temperatureText: {
     fontSize: 28,
