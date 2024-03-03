@@ -19,7 +19,7 @@ const Weather = ({ location }) => {
   }, [location]);
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, justifyContent: isLoading ? "center" : "", alignItems: isLoading ? "center" : "" }}>
       <RenderIf isTrue={!isLoading} fallback={<Loading />}>
         <RenderIf isTrue={!error} fallback={<Text style={styles.errorText}>{error?.data?.error?.code === 1006 ? error?.data?.error?.message : "An Error Occurred"} </Text>}>
           <View style={styles.buttonContainer}>
