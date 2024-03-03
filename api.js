@@ -5,7 +5,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
   endpoints: (builder) => ({
     getCurrentWeather: builder.query({
-      query: (location) => `forecast.json?key=${API_KEY}&days=1&q=${location}`,
+      query: ({ location, days }) => `forecast.json?key=${API_KEY}&days=${days}&q=${location}`,
     }),
   }),
 });

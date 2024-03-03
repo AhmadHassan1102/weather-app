@@ -1,12 +1,14 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import ForecastCard from "./ForecastCard";
 import Loading from "./Loading";
 import RenderIf from "./RenderIf";
 import { useGetCurrentWeatherQuery } from "../api";
 
 const Weather = ({ location }) => {
-  const { data, error, isLoading, refetch } = useGetCurrentWeatherQuery(location);
+  const days = 3;
+  const { data, error, isLoading, refetch } = useGetCurrentWeatherQuery({ location, days });
 
   const [tempUnit, setTempUnit] = useState("c");
 
@@ -32,6 +34,26 @@ const Weather = ({ location }) => {
           <Text style={styles.conditionText}>{data?.current?.condition?.text}</Text>
           <Image style={styles.image} source={{ uri: data?.current?.condition?.icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png" }} />
           <Text style={styles.locationText}>{data?.location?.name + ", " + data?.location?.country}</Text>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+            {data?.forecast?.forecastday.map((day) => {
+              return day?.hour.map((value, index) => {
+                const { text, icon } = value.condition;
+
+                if (value.time_epoch > data.current.last_updated_epoch)
+                  return (
+                    <ForecastCard
+                      key={index}
+                      temperature={value?.[`temp_${tempUnit}`]}
+                      time={value?.time}
+                      condition={text}
+                      imageUrl={icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png"}
+                      tempUnit={tempUnit}
+                    />
+                  );
+              });
+            })}
+          </ScrollView>
         </RenderIf>
       </RenderIf>
     </View>
@@ -43,6 +65,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 40,
     width: "100%",
+  },
+  scrollContainer: {
+    padding: 10,
   },
   temperatureText: {
     fontSize: 28,
