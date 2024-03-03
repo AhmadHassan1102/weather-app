@@ -2,22 +2,15 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Loading from "./Loading";
-import { ReactQueryDevtools } from "react-query/devtools";
 import RenderIf from "./RenderIf";
 import { useGetCurrentWeatherQuery } from "../api";
-
-// ... (other code)
-
-// Place this component somewhere in your app
 
 const Weather = ({ location }) => {
   const { data, error, isLoading, refetch } = useGetCurrentWeatherQuery(location);
 
   const [tempUnit, setTempUnit] = useState("c");
 
-  const toggleTempUnit = () => {
-    setTempUnit(tempUnit === "c" ? "f" : "c");
-  };
+  const toggleTempUnit = () => setTempUnit(tempUnit === "c" ? "f" : "c");
 
   useEffect(() => {
     if (location) refetch();
