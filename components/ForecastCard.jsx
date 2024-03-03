@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 2,
     alignItems: "center",
+    height: 200,
   },
   temperature: {
     fontSize: 24,
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
 });
 

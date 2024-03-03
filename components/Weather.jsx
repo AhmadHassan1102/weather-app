@@ -22,37 +22,40 @@ const Weather = ({ location }) => {
     <View style={{ ...styles.container, justifyContent: isLoading ? "center" : "", alignItems: isLoading ? "center" : "" }}>
       <RenderIf isTrue={!isLoading} fallback={<Loading />}>
         <RenderIf isTrue={!error} fallback={<Text style={styles.errorText}>{error?.data?.error?.code === 1006 ? error?.data?.error?.message : "An Error Occurred"} </Text>}>
-          <View style={styles.buttonContainer}>
-            <Text style={styles.temperatureText}>
-              {data?.current?.[`temp_${tempUnit}`]}°{tempUnit.toUpperCase()}
-            </Text>
-            <TouchableOpacity style={styles.button} onPress={toggleTempUnit}>
-              <Text style={styles.buttonText}>{tempUnit === "c" ? "Switch to Fahrenheit" : "Switch to Celsius"}</Text>
-            </TouchableOpacity>
-          </View>
+          <ScrollView>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.temperatureText}>
+                {data?.current?.[`temp_${tempUnit}`]}°{tempUnit.toUpperCase()}
+              </Text>
 
-          <Text style={styles.conditionText}>{data?.current?.condition?.text}</Text>
-          <Image style={styles.image} source={{ uri: data?.current?.condition?.icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png" }} />
-          <Text style={styles.locationText}>{data?.location?.name + ", " + data?.location?.country}</Text>
+              <TouchableOpacity style={styles.button} onPress={toggleTempUnit}>
+                <Text style={styles.buttonText}>{tempUnit === "c" ? "Switch to Fahrenheit" : "Switch to Celsius"}</Text>
+              </TouchableOpacity>
+            </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
-            {data?.forecast?.forecastday.map((day) => {
-              return day?.hour.map((value, index) => {
-                const { text, icon } = value.condition;
+            <Text style={styles.conditionText}>{data?.current?.condition?.text}</Text>
+            <Image style={styles.image} source={{ uri: data?.current?.condition?.icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png" }} />
+            <Text style={styles.locationText}>{data?.location?.name + ", " + data?.location?.country}</Text>
 
-                if (value.time_epoch > data.current.last_updated_epoch)
-                  return (
-                    <ForecastCard
-                      key={index}
-                      temperature={value?.[`temp_${tempUnit}`]}
-                      time={value?.time}
-                      condition={text}
-                      imageUrl={icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png"}
-                      tempUnit={tempUnit}
-                    />
-                  );
-              });
-            })}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
+              {data?.forecast?.forecastday.map((day) => {
+                return day?.hour.map((value, index) => {
+                  const { text, icon } = value.condition;
+
+                  if (value.time_epoch > data.current.last_updated_epoch)
+                    return (
+                      <ForecastCard
+                        key={index}
+                        temperature={value?.[`temp_${tempUnit}`]}
+                        time={value?.time}
+                        condition={text}
+                        imageUrl={icon ?? "https://cdn.weatherapi.com/weather/64x64/day/143.png"}
+                        tempUnit={tempUnit}
+                      />
+                    );
+                });
+              })}
+            </ScrollView>
           </ScrollView>
         </RenderIf>
       </RenderIf>
